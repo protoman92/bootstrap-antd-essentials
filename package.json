@@ -1,0 +1,41 @@
+{
+  "name": "bootstrap-antd-essentials",
+  "version": "1.0.0",
+  "description": "Library of essentials for a bootstrapped React project with antd",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/protoman92/bootstrap-antd-essentials.git"
+  },
+  "keywords": [
+    "antd",
+    "bootstrap",
+    "react",
+    "typescript"
+  ],
+  "author": "Hai Pham <swiften.svc@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/protoman92/bootstrap-antd-essentials/issues"
+  },
+  "homepage": "https://github.com/protoman92/bootstrap-antd-essentials#readme",
+  "dependencies": {
+    "antd": "^3.20.2",
+    "bootstrap-react-essentials": "^2.1.1"
+  },
+  "devDependencies": {
+    "@types/enzyme": "^3.10.2",
+    "@types/jest": "^24.0.15",
+    "@types/recompose": "^0.30.6",
+    "@types/redux": "^3.6.0",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "jest": "^24.8.0",
+    "ts-essentials": "^3.0.0",
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.5.3"
+  }
+}
