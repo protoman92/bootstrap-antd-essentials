@@ -3,7 +3,7 @@ module.exports = {
   transform: {
     "^.+\\.tsx?$": "ts-jest"
   },
-  testRegex: ".*.(test|spec)\\.(jsx?|tsx?)$",
+  testRegex: "src/*.*(test|spec)\\.(jsx?|tsx?)$",
   collectCoverage: true,
   modulePaths: ["src"],
   setupFiles: ["<rootDir>/setupTests.js"]
