@@ -7,9 +7,14 @@ import "./App.scss";
 /** @type {Repository.URLDataSync} */
 const urlDataSync = {
   ...createURLDataSyncRepository(window),
-  get: async () => ({
-    results: [...Array(100).keys()].map(v => ({ name: v, status: v }))
-  }),
+  get: async (...args) => {
+    console.log(`Getting`, args);
+    return {
+      results: [...Array(100).keys()].map(v => ({ name: v, status: v })),
+      next: `${Math.random() * 1000}`,
+      previous: `${Math.random() * 1000}`
+    };
+  },
   update: async () => ({})
 };
 

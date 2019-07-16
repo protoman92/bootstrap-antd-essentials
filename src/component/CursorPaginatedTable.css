@@ -1,0 +1,8 @@
+.cursor-paginated-table-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.cursor-paginated-table-container .ant-pagination-item {
+  display: none !important;
+}

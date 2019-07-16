@@ -1,4 +1,4 @@
-import { Icon, Table } from "antd";
+import { Table } from "antd";
 import "antd/dist/antd.min.css";
 import { ColumnProps, TypedColumnProps } from "antd/lib/table";
 import { lifecycle } from "bootstrap-react-essentials/dist/component/hoc/betterRecompose";
@@ -11,6 +11,7 @@ import { toArray } from "bootstrap-react-essentials/dist/utils";
 import React from "react";
 import { compose } from "recompose";
 import { StrictOmit } from "ts-essentials";
+import "./CursorPaginatedTable.css";
 
 declare module "antd/lib/table" {
   interface TypedColumnProps<T>
@@ -60,44 +61,29 @@ function PrivateCursorPaginatedTable<T>({
     }
   );
 
+  const limit = parseInt(toArray(urlQuery["limit"] || "")[0], undefined) || 10;
+
   return (
-    <div
-      className="cursor-paginated-table-container"
-      style={{ display: "flex", flexDirection: "column" }}
-    >
+    <div className="cursor-paginated-table-container">
       <Table
         columns={columns}
         dataSource={[...data]}
         loading={isLoadingData}
-        onChange={(p, f, o) => updateURLQuery(f)}
+        onChange={({ current, pageSize }, f, o) => {
+          updateURLQuery(f, { limit: `${pageSize}` });
+        }}
         pagination={{
-          hideOnSinglePage: true,
-          pageSize:
-            parseInt(toArray(urlQuery["limit"] || "")[0], undefined) ||
-            undefined,
-          total: 1
+          current: 2,
+          defaultCurrent: 2,
+          onChange: newPage => {
+            newPage === 1 ? goToPreviousPage() : goToNextPage();
+          },
+          pageSize: limit,
+          total: limit * 3,
+          showSizeChanger: true
         }}
         rowKey={rowKey}
       />
-
-      {!!data.length && (
-        <div
-          className="icon-container"
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            margin: "16px 0 0 0"
-          }}
-        >
-          <Icon onClick={goToPreviousPage} type="left" />
-
-          <Icon
-            onClick={goToNextPage}
-            style={{ margin: "0 0 0 16px" }}
-            type="right"
-          />
-        </div>
-      )}
     </div>
   );
 }
