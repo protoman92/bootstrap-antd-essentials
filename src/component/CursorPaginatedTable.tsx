@@ -69,14 +69,14 @@ function PrivateCursorPaginatedTable<T>({
         columns={columns}
         dataSource={[...data]}
         loading={isLoadingData}
-        onChange={({ current, pageSize }, f, o) => {
-          updateURLQuery(f, { limit: `${pageSize}` });
+        onChange={({ pageSize }, f, o) => {
+          updateURLQuery({ ...f, limit: `${pageSize}` });
         }}
         pagination={{
           current: 2,
           defaultCurrent: 2,
-          onChange: newPage => {
-            newPage === 1 ? goToPreviousPage() : goToNextPage();
+          onChange: page => {
+            page === 1 ? goToPreviousPage() : goToNextPage();
           },
           pageSize: limit,
           total: limit * 3,
