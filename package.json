@@ -1,9 +1,12 @@
 {
   "name": "bootstrap-antd-essentials",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Library of essentials for a bootstrapped React project with antd",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
+    "copyfiles:css": "cp src/**/*.css dist/component",
+    "copyfiles": "npm run copyfiles:css",
     "test": "jest"
   },
   "repository": {
@@ -39,5 +42,11 @@
     "ts-essentials": "^3.0.0",
     "ts-jest": "^24.0.2",
     "typescript": "^3.5.3"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }
