@@ -12,12 +12,14 @@ after_success:
 before_script:
   - npm install
 before_deploy:
+  - npm run copyfiles
   - rm -rf dist/**/*.test.*
 deploy:
   provider: npm
   email: swiften.svc@gmail.com
   api_key:
     secure: X7P9PzgcuZdtctmdTU4rJ4YMxD/xSs3+JDQU5fRfKP6gUB2JMlT+BtG+/asuyui/IuHw4UFcU7UMlKTWkdD6isdDa4TSDaxmvS+Edn0O2uGgup2VVGXs0hR5MMJNwDCbN2T4wknPth8GM09Hz+u7DeXvYifk1DJBu5mYq4KrCh8K9eu4hrnMkYnR3DdrO6DqeRfl9E9G3U1AVlRRsQRT4hBDKRfXsBOs0AdtmKjOiX6Y7tic3uChSRObTqHxh2Iownsdmy+zo4nVz7THTi2hGaCHGdZGq80tzTIydTuDNybY+S91csBmFwZCdMpTNdmD9iHAEgD3GjWzaBmpQJqO5qB2fLRlDAUlwp7fgDbkmtwgu/XMKevNgcM86w5vaX8HE1EzRr5QXm2fR9IC4IRqttOHDlkj5+B5HIvcV2HMIHVU7VvHytGQmmzGTwi4bxtOROh+FWgdYAAURE2Ck6f0+twyuh8caMSJNfNWg0ukfYSAVALGZ0kp5WJAJYaShpSFuhkf1U1QXcWlP+21q8JFNq7Ahk+p1bd3DTMYCGcrazq2pojC4RMi6jQuMw+hnrDwjjxjQWJz+WHeyH+bdUz8IVOcpAkPRpO4/c4Fgl3iTMXxFNB7V2od2GLptz1zIE1XRldrddjowgxB0l2EQ9DtsnxlwOg8yI2c3NibeRKPf/I=
+  skip_cleanup: true
   on:
     tags: true
     repo: protoman92/bootstrap-antd-essentials
