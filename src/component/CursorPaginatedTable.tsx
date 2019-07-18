@@ -20,10 +20,10 @@ declare module "antd/lib/table" {
   }
 }
 
-interface CursorPaginatedTableInProps<T>
+export interface CursorPaginatedTableInProps<T>
   extends URLCursorPaginatedDataSyncInProps<T> {}
 
-interface CursorPaginatedTableOutProps<T>
+export interface CursorPaginatedTableOutProps<T>
   extends URLCursorPaginatedDataSyncOutProps<T> {
   readonly columns: readonly TypedColumnProps<T>[];
   readonly rowKey: Extract<keyof T, string>;
