@@ -12,7 +12,9 @@ const urlDataSync = {
     return {
       results: [...Array(100).keys()].map(v => ({ name: v, status: v })),
       next: `${Math.random() * 1000}`,
-      previous: `${Math.random() * 1000}`
+      hasNext: true,
+      previous: `${Math.random() * 1000}`,
+      hasPrevious: true
     };
   },
   update: async () => ({})

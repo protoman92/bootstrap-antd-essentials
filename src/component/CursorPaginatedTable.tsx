@@ -3,6 +3,7 @@ import "antd/dist/antd.min.css";
 import { ColumnProps, TypedColumnProps } from "antd/lib/table";
 import { lifecycle } from "bootstrap-react-essentials/dist/component/hoc/betterRecompose";
 import {
+  CursorPaginationInProps,
   urlCursorPaginatedDataSync,
   URLCursorPaginatedDataSyncInProps,
   URLCursorPaginatedDataSyncOutProps
@@ -21,7 +22,8 @@ declare module "antd/lib/table" {
 }
 
 export interface CursorPaginatedTableInProps<T>
-  extends URLCursorPaginatedDataSyncInProps<T> {}
+  extends Pick<CursorPaginationInProps<T>, "hasNext" | "hasPrevious">,
+    URLCursorPaginatedDataSyncInProps<T> {}
 
 export interface CursorPaginatedTableOutProps<T>
   extends URLCursorPaginatedDataSyncOutProps<T> {
@@ -42,6 +44,8 @@ export interface CursorPaginatedTableOutProps<T>
 function PrivateCursorPaginatedTable<T>({
   columns: baseColumns,
   data,
+  hasNext,
+  hasPrevious,
   isLoadingData,
   rowKey,
   urlQuery,
@@ -73,7 +77,8 @@ function PrivateCursorPaginatedTable<T>({
           updateURLQuery({ ...f, limit: `${pageSize}` });
         }}
         pagination={{
-          current: 2,
+          // @ts-ignore
+          current: 2 - !hasPrevious + !hasNext,
           defaultCurrent: 2,
           onChange: page => {
             page === 1 ? goToPreviousPage() : goToNextPage();
