@@ -1,6 +1,6 @@
 import { Table } from "antd";
 import "antd/dist/antd.min.css";
-import { ColumnProps, TypedColumnProps } from "antd/lib/table";
+import { ColumnProps, SortOrder, TypedColumnProps } from "antd/lib/table";
 import { lifecycle } from "bootstrap-react-essentials/dist/component/hoc/betterRecompose";
 import {
   CursorPaginationInProps,
@@ -16,8 +16,11 @@ import "./CursorPaginatedTable.css";
 
 declare module "antd/lib/table" {
   interface TypedColumnProps<T>
-    extends StrictOmit<ColumnProps<T>, "filteredValue"> {
-    readonly dataIndex?: Extract<keyof T, string>;
+    extends StrictOmit<
+      ColumnProps<T>,
+      "dataIndex" | "filteredValue" | "sortOrder" | "sortDirections"
+    > {
+    readonly dataIndex: Extract<keyof T, string>;
   }
 }
 
@@ -55,13 +58,23 @@ function PrivateCursorPaginatedTable<T>({
   updateURLQuery
 }: CursorPaginatedTableInProps<T> &
   StrictOmit<CursorPaginatedTableOutProps<T>, "urlDataSync">) {
+  const sortField = toArray(urlQuery["sortField"] || "")[0] || undefined;
+  const sortOrder = toArray(urlQuery["order"] || "")[0] as SortOrder;
+
   const columns: ColumnProps<T>[] = baseColumns.map(
     (column): ColumnProps<T> => {
       const filteredValue = [
         ...((!!getFilteredValue && getFilteredValue(column, urlQuery)) || [])
       ];
 
-      return { ...column, filteredValue };
+      const { dataIndex } = column;
+
+      return {
+        ...column,
+        filteredValue,
+        sortOrder: sortField === dataIndex ? sortOrder : undefined,
+        sortDirections: ["ascend", "descend"]
+      };
     }
   );
 
@@ -73,20 +86,23 @@ function PrivateCursorPaginatedTable<T>({
         columns={columns}
         dataSource={[...data]}
         loading={isLoadingData}
-        onChange={({ pageSize }, f, o) => {
-          updateURLQuery({ ...f, limit: `${pageSize}` });
+        onChange={({ pageSize }, f, { field: sortField, order }) => {
+          updateURLQuery({ ...f, limit: `${pageSize}`, order, sortField });
         }}
-        pagination={{
-          // @ts-ignore
-          current: 2 - !hasPrevious + !hasNext,
-          defaultCurrent: 2,
-          onChange: page => {
-            page === 1 ? goToPreviousPage() : goToNextPage();
-          },
-          pageSize: limit,
-          total: limit * 3,
-          showSizeChanger: true
-        }}
+        pagination={
+          !hasPrevious && !hasNext
+            ? false
+            : {
+                // @ts-ignore
+                current: 2 - !hasPrevious + !hasNext,
+                onChange: page => {
+                  page === 1 ? goToPreviousPage() : goToNextPage();
+                },
+                pageSize: limit,
+                total: limit * 3,
+                showSizeChanger: true
+              }
+        }
         rowKey={rowKey}
       />
     </div>

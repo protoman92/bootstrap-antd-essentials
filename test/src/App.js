@@ -25,11 +25,12 @@ function App() {
     <div className="App">
       <CursorPaginatedTable
         columns={[
-          { title: "Name", dataIndex: "name" },
+          { title: "Name", dataIndex: "name", sorter: true },
           {
             title: "Status",
             dataIndex: "status",
-            filters: [{ text: "1", value: "1" }, { text: "2", value: "2" }]
+            filters: [{ text: "1", value: "1" }, { text: "2", value: "2" }],
+            sorter: true
           }
         ]}
         getFilteredValue={({ dataIndex }, urlQuery) => {

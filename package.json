@@ -1,6 +1,6 @@
 {
   "name": "bootstrap-antd-essentials",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Library of essentials for a bootstrapped React project with antd",
   "scripts": {
     "build": "tsc",
