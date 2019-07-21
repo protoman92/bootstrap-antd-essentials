@@ -15,7 +15,7 @@ import { StrictOmit } from "ts-essentials";
 import "./CursorPaginatedTable.css";
 
 declare module "antd/lib/table" {
-  interface TypedColumnProps<T>
+  export interface TypedColumnProps<T>
     extends StrictOmit<
       ColumnProps<T>,
       "dataIndex" | "filteredValue" | "sortOrder" | "sortDirections"
@@ -39,6 +39,10 @@ export interface CursorPaginatedTableOutProps<T>
   ): readonly string[] | undefined;
 }
 
+function mapSortOrder(sortOrder?: string): SortOrder {
+  return `${sortOrder}`.startsWith("asc") ? "ascend" : "descend";
+}
+
 /**
  * Abstract the work needed to set up a table that displays paginated data
  * from a server source. Cursor-paginated data assumes that user can only go
@@ -50,7 +54,10 @@ function PrivateCursorPaginatedTable<T>({
   hasNext,
   hasPrevious,
   isLoadingData,
+  limit,
+  order,
   rowKey,
+  sortField,
   urlQuery,
   getFilteredValue,
   goToNextPage,
@@ -58,8 +65,7 @@ function PrivateCursorPaginatedTable<T>({
   updateURLQuery
 }: CursorPaginatedTableInProps<T> &
   StrictOmit<CursorPaginatedTableOutProps<T>, "urlDataSync">) {
-  const sortField = toArray(urlQuery["sortField"] || "")[0] || undefined;
-  const sortOrder = toArray(urlQuery["order"] || "")[0] as SortOrder;
+  const sortOrder = mapSortOrder(order);
 
   const columns: ColumnProps<T>[] = baseColumns.map(
     (column): ColumnProps<T> => {
@@ -78,7 +84,7 @@ function PrivateCursorPaginatedTable<T>({
     }
   );
 
-  const limit = parseInt(toArray(urlQuery["limit"] || "")[0], undefined) || 10;
+  limit = limit || 10;
 
   return (
     <div className="cursor-paginated-table-container">

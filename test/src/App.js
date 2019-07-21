@@ -11,6 +11,8 @@ const urlDataSync = {
     console.log(`Getting`, args);
     return {
       results: [...Array(100).keys()].map(v => ({ name: v, status: v })),
+      order: "ascend",
+      sortField: "status",
       next: `${Math.random() * 1000}`,
       hasNext: true,
       previous: `${Math.random() * 1000}`,
