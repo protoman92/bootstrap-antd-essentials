@@ -3,13 +3,11 @@ import "antd/dist/antd.min.css";
 import { ColumnProps, SortOrder, TypedColumnProps } from "antd/lib/table";
 import { lifecycle } from "bootstrap-react-essentials/dist/component/hoc/betterRecompose";
 import {
-  CursorPaginationInProps,
   urlCursorPaginatedDataSync,
   URLCursorPaginatedDataSyncInProps,
   URLCursorPaginatedDataSyncOutProps
 } from "bootstrap-react-essentials/dist/component/hoc/dataHOC";
-import { toArray } from "bootstrap-react-essentials/dist/utils";
-import React from "react";
+import React, { Component } from "react";
 import { compose } from "recompose";
 import { StrictOmit } from "ts-essentials";
 import "./CursorPaginatedTable.css";
@@ -25,8 +23,7 @@ declare module "antd/lib/table" {
 }
 
 export interface CursorPaginatedTableInProps<T>
-  extends Pick<CursorPaginationInProps<T>, "hasNext" | "hasPrevious">,
-    URLCursorPaginatedDataSyncInProps<T> {}
+  extends URLCursorPaginatedDataSyncInProps<T> {}
 
 export interface CursorPaginatedTableOutProps<T>
   extends URLCursorPaginatedDataSyncOutProps<T> {
@@ -48,71 +45,86 @@ function mapSortOrder(sortOrder?: string): SortOrder {
  * from a server source. Cursor-paginated data assumes that user can only go
  * forward/backward, and not jump pages.
  */
-function PrivateCursorPaginatedTable<T>({
-  columns: baseColumns,
-  data,
-  hasNext,
-  hasPrevious,
-  isLoadingData,
-  limit,
-  order,
-  rowKey,
-  sortField,
-  urlQuery,
-  getFilteredValue,
-  goToNextPage,
-  goToPreviousPage,
-  updateURLQuery
-}: CursorPaginatedTableInProps<T> &
-  StrictOmit<CursorPaginatedTableOutProps<T>, "urlDataSync">) {
-  const sortOrder = mapSortOrder(order);
+class PrivateCursorPaginatedTable<T> extends Component<
+  CursorPaginatedTableInProps<T> &
+    StrictOmit<CursorPaginatedTableOutProps<T>, "urlDataSync">
+> {
+  didGoToDifferentPage = false;
 
-  const columns: ColumnProps<T>[] = baseColumns.map(
-    (column): ColumnProps<T> => {
-      const filteredValue = [
-        ...((!!getFilteredValue && getFilteredValue(column, urlQuery)) || [])
-      ];
+  render() {
+    let {
+      columns: baseColumns,
+      data,
+      hasNext,
+      hasPrevious,
+      isLoadingData,
+      limit,
+      order,
+      rowKey,
+      sortField,
+      appendURLQuery,
+      getFilteredValue,
+      getURLQuery,
+      goToNextPage,
+      goToPreviousPage
+    } = this.props;
 
-      const { dataIndex } = column;
+    const urlQuery = getURLQuery();
+    const sortOrder = mapSortOrder(order);
 
-      return {
-        ...column,
-        filteredValue,
-        sortOrder: sortField === dataIndex ? sortOrder : undefined,
-        sortDirections: ["ascend", "descend"]
-      };
-    }
-  );
+    const columns: ColumnProps<T>[] = baseColumns.map(
+      (column): ColumnProps<T> => {
+        const filteredValue = [
+          ...((!!getFilteredValue && getFilteredValue(column, urlQuery)) || [])
+        ];
 
-  limit = limit || 10;
+        const { dataIndex } = column;
 
-  return (
-    <div className="cursor-paginated-table-container">
-      <Table
-        columns={columns}
-        dataSource={[...data]}
-        loading={isLoadingData}
-        onChange={({ pageSize }, f, { field: sortField, order }) => {
-          updateURLQuery({ ...f, limit: `${pageSize}`, order, sortField });
-        }}
-        pagination={
-          !hasPrevious && !hasNext
-            ? false
-            : {
-                // @ts-ignore
-                current: 2 - !hasPrevious + !hasNext,
-                onChange: page => {
-                  page === 1 ? goToPreviousPage() : goToNextPage();
-                },
-                pageSize: limit,
-                total: limit * 3,
-                showSizeChanger: true
-              }
-        }
-        rowKey={rowKey}
-      />
-    </div>
-  );
+        return {
+          ...column,
+          filteredValue,
+          sortOrder: sortField === dataIndex ? sortOrder : undefined,
+          sortDirections: ["ascend", "descend"]
+        };
+      }
+    );
+
+    limit = limit || 10;
+
+    return (
+      <div className="cursor-paginated-table-container">
+        <Table
+          columns={columns}
+          dataSource={[...data]}
+          loading={isLoadingData}
+          onChange={({ pageSize }, f, { field: sortField, order }) => {
+            if (!!this.didGoToDifferentPage) {
+              this.didGoToDifferentPage = false;
+              return;
+            }
+
+            appendURLQuery({ ...f, limit: `${pageSize}`, order, sortField });
+          }}
+          pagination={
+            !hasPrevious && !hasNext
+              ? false
+              : {
+                  // @ts-ignore
+                  current: 2 - !hasPrevious + !hasNext,
+                  onChange: page => {
+                    this.didGoToDifferentPage = true;
+                    page === 1 ? goToPreviousPage() : goToNextPage();
+                  },
+                  pageSize: limit,
+                  total: limit * 3,
+                  showSizeChanger: true
+                }
+          }
+          rowKey={rowKey}
+        />
+      </div>
+    );
+  }
 }
 
 const Enhanced = compose<any, CursorPaginatedTableOutProps<any>>(

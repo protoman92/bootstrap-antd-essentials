@@ -4,9 +4,11 @@ import React from "react";
 import CursorPaginatedTable from "../../src/component/CursorPaginatedTable";
 import "./App.scss";
 
+const baseURLDataSync = createURLDataSyncRepository(window);
+
 /** @type {Repository.URLDataSync} */
 const urlDataSync = {
-  ...createURLDataSyncRepository(window),
+  ...baseURLDataSync,
   get: async (...args) => {
     console.log(`Getting`, args);
     return {
