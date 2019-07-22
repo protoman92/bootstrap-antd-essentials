@@ -51,7 +51,7 @@ function mapSortOrder(sortOrder?: string): SortOrder {
  * from a server source. Cursor-paginated data assumes that user can only go
  * forward/backward, and not jump pages.
  */
-class PrivateCursorPaginatedTable<T> extends Component<
+export class PrivateCursorPaginatedTable<T> extends Component<
   CursorPaginatedTableInProps<T> &
     StrictOmit<CursorPaginatedTableOutProps<T>, "urlDataSync">
 > {
@@ -66,13 +66,17 @@ class PrivateCursorPaginatedTable<T> extends Component<
   didGoToDifferentPage = false;
 
   didClickGoToNextPage() {
-    this.didGoToDifferentPage = true;
-    this.props.goToNextPage();
+    if (!!this.props.hasNext) {
+      this.didGoToDifferentPage = true;
+      this.props.goToNextPage();
+    }
   }
 
   didClickGoToPreviousPage() {
-    this.didGoToDifferentPage = true;
-    this.props.goToPreviousPage();
+    if (!!this.props.hasPrevious) {
+      this.didGoToDifferentPage = true;
+      this.props.goToPreviousPage();
+    }
   }
 
   onTableChange(
@@ -85,7 +89,7 @@ class PrivateCursorPaginatedTable<T> extends Component<
       return;
     }
 
-    this.props.appendURLQuery({ ...f, limit: `${pageSize}`, order, sortField });
+    this.props.updateURLQuery({ ...f, limit: `${pageSize}`, order, sortField });
   }
 
   renderPaginationItem(
