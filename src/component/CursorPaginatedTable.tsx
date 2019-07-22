@@ -1,6 +1,12 @@
 import { Table } from "antd";
 import "antd/dist/antd.min.css";
-import { ColumnProps, SortOrder, TypedColumnProps } from "antd/lib/table";
+import {
+  ColumnProps,
+  PaginationConfig,
+  SortOrder,
+  TableProps,
+  TypedColumnProps
+} from "antd/lib/table";
 import { lifecycle } from "bootstrap-react-essentials/dist/component/hoc/betterRecompose";
 import {
   urlCursorPaginatedDataSync,
@@ -49,7 +55,56 @@ class PrivateCursorPaginatedTable<T> extends Component<
   CursorPaginatedTableInProps<T> &
     StrictOmit<CursorPaginatedTableOutProps<T>, "urlDataSync">
 > {
+  constructor(props: typeof PrivateCursorPaginatedTable["prototype"]["props"]) {
+    super(props);
+    this.didClickGoToNextPage = this.didClickGoToNextPage.bind(this);
+    this.didClickGoToPreviousPage = this.didClickGoToPreviousPage.bind(this);
+    this.onTableChange = this.onTableChange.bind(this);
+    this.renderPaginationItem = this.renderPaginationItem.bind(this);
+  }
+
   didGoToDifferentPage = false;
+
+  didClickGoToNextPage() {
+    this.didGoToDifferentPage = true;
+    this.props.goToNextPage();
+  }
+
+  didClickGoToPreviousPage() {
+    this.didGoToDifferentPage = true;
+    this.props.goToPreviousPage();
+  }
+
+  onTableChange(
+    ...[{ pageSize }, f, { field: sortField, order }]: Parameters<
+      NonNullable<TableProps<T>["onChange"]>
+    >
+  ) {
+    if (!!this.didGoToDifferentPage) {
+      this.didGoToDifferentPage = false;
+      return;
+    }
+
+    this.props.appendURLQuery({ ...f, limit: `${pageSize}`, order, sortField });
+  }
+
+  renderPaginationItem(
+    ...[, type, element]: Parameters<
+      NonNullable<PaginationConfig["itemRender"]>
+    >
+  ) {
+    /** We cannot use onChange because sort/filter events trigger it as well. */
+    switch (type) {
+      case "next":
+        return <div onClick={this.didClickGoToNextPage}>{element}</div>;
+
+      case "prev":
+        return <div onClick={this.didClickGoToPreviousPage}>{element}</div>;
+
+      default:
+        return element;
+    }
+  }
 
   render() {
     let {
@@ -62,11 +117,8 @@ class PrivateCursorPaginatedTable<T> extends Component<
       order,
       rowKey,
       sortField,
-      appendURLQuery,
       getFilteredValue,
-      getURLQuery,
-      goToNextPage,
-      goToPreviousPage
+      getURLQuery
     } = this.props;
 
     const urlQuery = getURLQuery();
@@ -97,26 +149,16 @@ class PrivateCursorPaginatedTable<T> extends Component<
           columns={columns}
           dataSource={[...data]}
           loading={isLoadingData}
-          onChange={({ pageSize }, f, { field: sortField, order }) => {
-            if (!!this.didGoToDifferentPage) {
-              this.didGoToDifferentPage = false;
-              return;
-            }
-
-            appendURLQuery({ ...f, limit: `${pageSize}`, order, sortField });
-          }}
+          onChange={this.onTableChange}
           pagination={
             !hasPrevious && !hasNext
               ? false
               : {
                   // @ts-ignore
                   current: 2 - !hasPrevious + !hasNext,
-                  onChange: page => {
-                    this.didGoToDifferentPage = true;
-                    page === 1 ? goToPreviousPage() : goToNextPage();
-                  },
                   pageSize: limit,
                   total: limit * 3,
+                  itemRender: this.renderPaginationItem,
                   showSizeChanger: true
                 }
           }
