@@ -9,9 +9,9 @@ import {
 } from "antd/lib/table";
 import { lifecycle } from "bootstrap-react-essentials/dist/component/hoc/betterRecompose";
 import {
-  urlCursorPaginatedDataSync,
-  URLCursorPaginatedDataSyncInProps,
-  URLCursorPaginatedDataSyncOutProps
+  urlCursorPaginatedSyncHOC,
+  URLCursorPaginatedSyncInProps,
+  URLCursorPaginatedSyncOutProps
 } from "bootstrap-react-essentials/dist/component/hoc/dataHOC";
 import React, { Component } from "react";
 import { compose } from "recompose";
@@ -29,10 +29,10 @@ declare module "antd/lib/table" {
 }
 
 export interface CursorPaginatedTableInProps<T>
-  extends URLCursorPaginatedDataSyncInProps<T> {}
+  extends URLCursorPaginatedSyncInProps<T> {}
 
 export interface CursorPaginatedTableOutProps<T>
-  extends URLCursorPaginatedDataSyncOutProps<T> {
+  extends URLCursorPaginatedSyncOutProps<T> {
   readonly columns: readonly TypedColumnProps<T>[];
   readonly rowKey: Extract<keyof T, string>;
 
@@ -52,8 +52,7 @@ function mapSortOrder(sortOrder?: string): SortOrder {
  * forward/backward, and not jump pages.
  */
 export class PrivateCursorPaginatedTable<T> extends Component<
-  CursorPaginatedTableInProps<T> &
-    StrictOmit<CursorPaginatedTableOutProps<T>, "urlDataSync">
+  CursorPaginatedTableInProps<T> & CursorPaginatedTableOutProps<T>
 > {
   constructor(props: typeof PrivateCursorPaginatedTable["prototype"]["props"]) {
     super(props);
@@ -89,7 +88,12 @@ export class PrivateCursorPaginatedTable<T> extends Component<
       return;
     }
 
-    this.props.updateURLQuery({ ...f, limit: `${pageSize}`, order, sortField });
+    this.props.replaceURLQuery({
+      ...f,
+      limit: `${pageSize}`,
+      order,
+      sortField
+    });
   }
 
   renderPaginationItem(
@@ -174,7 +178,7 @@ export class PrivateCursorPaginatedTable<T> extends Component<
 }
 
 const Enhanced = compose<any, CursorPaginatedTableOutProps<any>>(
-  urlCursorPaginatedDataSync(),
+  urlCursorPaginatedSyncHOC(),
   lifecycle({
     componentDidMount() {
       const { getData } = this.props as any;
@@ -186,15 +190,15 @@ const Enhanced = compose<any, CursorPaginatedTableOutProps<any>>(
 export default function CursorPaginatedTable<T>({
   columns,
   rowKey,
-  urlDataSync,
-  getFilteredValue
+  getFilteredValue,
+  syncRepository
 }: CursorPaginatedTableOutProps<T>) {
   return (
     <Enhanced
       columns={columns}
       getFilteredValue={getFilteredValue}
-      urlDataSync={urlDataSync}
       rowKey={rowKey}
+      syncRepository={syncRepository}
     />
   );
 }

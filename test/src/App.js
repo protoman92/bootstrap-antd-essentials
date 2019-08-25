@@ -5,9 +5,9 @@ import CursorPaginatedTable from "../../src/component/CursorPaginatedTable";
 import "./App.scss";
 
 const baseURLDataSync = createURLDataSyncRepository(window);
-
+console.log(baseURLDataSync);
 /** @type {Repository.URLDataSync} */
-const urlDataSync = {
+const syncRepository = {
   ...baseURLDataSync,
   get: async (...args) => {
     console.log(`Getting`, args);
@@ -46,8 +46,8 @@ function App() {
               return undefined;
           }
         }}
-        urlDataSync={urlDataSync}
         rowKey={"name"}
+        syncRepository={syncRepository}
       />
     </div>
   );

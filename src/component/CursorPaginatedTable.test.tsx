@@ -126,7 +126,7 @@ describe("Cursor paginated table", () => {
 
   it("Should not update URL query if going to next page", async () => {
     // Setup
-    const updateURLQuery = jest.fn();
+    const replaceURLQuery = jest.fn();
 
     const Element = createElement(
       pickProps(
@@ -136,7 +136,7 @@ describe("Cursor paginated table", () => {
         "getURLQuery",
         "goToNextPage",
         "hasNext",
-        "updateURLQuery"
+        "replaceURLQuery"
       ),
       {
         columns: [],
@@ -144,7 +144,7 @@ describe("Cursor paginated table", () => {
         getURLQuery: () => ({}),
         goToNextPage: () => {},
         hasNext: true,
-        updateURLQuery
+        replaceURLQuery
       }
     );
 
@@ -172,12 +172,12 @@ describe("Cursor paginated table", () => {
     );
 
     // Then
-    expect(updateURLQuery).toHaveBeenCalled();
+    expect(replaceURLQuery).toHaveBeenCalled();
   });
 
   it("Should not update URL query if going to previous page", async () => {
     // Setup
-    const updateURLQuery = jest.fn();
+    const replaceURLQuery = jest.fn();
 
     const Element = createElement(
       pickProps(
@@ -187,7 +187,7 @@ describe("Cursor paginated table", () => {
         "getURLQuery",
         "goToPreviousPage",
         "hasPrevious",
-        "updateURLQuery"
+        "replaceURLQuery"
       ),
       {
         columns: [],
@@ -195,7 +195,7 @@ describe("Cursor paginated table", () => {
         getURLQuery: () => ({}),
         goToPreviousPage: () => {},
         hasPrevious: true,
-        updateURLQuery
+        replaceURLQuery
       }
     );
 
@@ -223,6 +223,6 @@ describe("Cursor paginated table", () => {
     );
 
     // Then
-    expect(updateURLQuery).toHaveBeenCalled();
+    expect(replaceURLQuery).toHaveBeenCalled();
   });
 });

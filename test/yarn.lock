@@ -2094,10 +2094,10 @@ boolbase@^1.0.0, boolbase@~1.0.0:
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
 
-bootstrap-react-essentials@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/bootstrap-react-essentials/-/bootstrap-react-essentials-2.3.0.tgz#5071679c21be13e878774f3de2757abc604d2b6c"
-  integrity sha512-xC9vPF+bDX6H4NFdwAhSh7elujp2WqIBW9MZRYb0Rieh9APgM2t6nv+8/FsgbtCBT6lNFa/YvyEHQr70CPUJcQ==
+bootstrap-react-essentials@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/bootstrap-react-essentials/-/bootstrap-react-essentials-3.0.0.tgz#ce3b8603fbc0d54d47fca15f232190330317849f"
+  integrity sha512-aJ6sjRr+4IKeYrt/CazgHbrVX6p2RZnHCUawq7bHrVUwWISfdzBb9mGJaLDm22YFdpDOWaw9/ek1wmE8weLTVA==
   dependencies:
     axios "^0.19.0"
     lodash "^4.17.13"
@@ -2846,6 +2846,14 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     ripemd160 "^2.0.0"
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
+
+cross-env@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/cross-env/-/cross-env-5.2.0.tgz#6ecd4c015d5773e614039ee529076669b9d126f2"
+  integrity sha512-jtdNFfFW1hB7sMhr/H6rW1Z45LFqyI431m3qU6bFXcQ3Eh7LtBuG3h74o7ohHZ3crrRkkqHlo4jYHFPcjroANg==
+  dependencies:
+    cross-spawn "^6.0.5"
+    is-windows "^1.0.0"
 
 cross-spawn@6.0.5, cross-spawn@^6.0.0, cross-spawn@^6.0.5:
   version "6.0.5"
@@ -5240,7 +5248,7 @@ is-utf8@^0.2.0:
   resolved "https://registry.yarnpkg.com/is-utf8/-/is-utf8-0.2.1.tgz#4b0da1442104d1b336340e80797e865cf39f7d72"
   integrity sha1-Sw2hRCEE0bM2NA6AeX6GXPOffXI=
 
-is-windows@^1.0.2:
+is-windows@^1.0.0, is-windows@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/is-windows/-/is-windows-1.0.2.tgz#d1850eb9791ecd18e6182ce12a30f396634bb19d"
   integrity sha512-eXK1UInq2bPmjyX6e3VHIzMLobc4J94i4AWn+Hpq3OU5KkrRC96OAcR3PRJ/pGu6m8TRnBHP9dkXQVsT/COVIA==
