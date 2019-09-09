@@ -5,7 +5,7 @@ import CursorPaginatedTable from "../../src/component/CursorPaginatedTable";
 import "./App.scss";
 
 const baseURLDataSync = createURLDataSyncRepository(window);
-console.log(baseURLDataSync);
+
 /** @type {Repository.URLDataSync} */
 const syncRepository = {
   ...baseURLDataSync,
@@ -47,6 +47,7 @@ function App() {
           }
         }}
         rowKey={"name"}
+        overrideConfiguration={{ baseURL: "test", url: "test" }}
         syncRepository={syncRepository}
       />
     </div>

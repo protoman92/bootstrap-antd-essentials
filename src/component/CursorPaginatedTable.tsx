@@ -32,7 +32,7 @@ export interface CursorPaginatedTableInProps<T>
   extends URLCursorPaginatedSyncInProps<T> {}
 
 export interface CursorPaginatedTableOutProps<T>
-  extends URLCursorPaginatedSyncOutProps<T> {
+  extends URLCursorPaginatedSyncOutProps {
   readonly columns: readonly TypedColumnProps<T>[];
   readonly rowKey: Extract<keyof T, string>;
 
@@ -191,12 +191,14 @@ export default function CursorPaginatedTable<T>({
   columns,
   rowKey,
   getFilteredValue,
+  overrideConfiguration,
   syncRepository
 }: CursorPaginatedTableOutProps<T>) {
   return (
     <Enhanced
       columns={columns}
       getFilteredValue={getFilteredValue}
+      overrideConfiguration={overrideConfiguration}
       rowKey={rowKey}
       syncRepository={syncRepository}
     />

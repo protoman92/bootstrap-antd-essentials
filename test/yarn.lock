@@ -2094,10 +2094,10 @@ boolbase@^1.0.0, boolbase@~1.0.0:
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
 
-bootstrap-react-essentials@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/bootstrap-react-essentials/-/bootstrap-react-essentials-3.0.0.tgz#ce3b8603fbc0d54d47fca15f232190330317849f"
-  integrity sha512-aJ6sjRr+4IKeYrt/CazgHbrVX6p2RZnHCUawq7bHrVUwWISfdzBb9mGJaLDm22YFdpDOWaw9/ek1wmE8weLTVA==
+bootstrap-react-essentials@^3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/bootstrap-react-essentials/-/bootstrap-react-essentials-3.4.1.tgz#3536790c36a047ed5a5225d1b58e74c17884ab85"
+  integrity sha512-G13x5+f7H2mLBgcJpDaA3MNWNwfNNYDt3ap3s8MCCF1kfpiUxKmj1M9Qxh6cn7a0A9c75mY0cVB3gmFvGIwy4w==
   dependencies:
     axios "^0.19.0"
     lodash "^4.17.13"
