@@ -17,6 +17,7 @@ import React, { Component } from "react";
 import { compose } from "recompose";
 import { StrictOmit } from "ts-essentials";
 import "./CursorPaginatedTable.css";
+import { render } from "enzyme";
 
 declare module "antd/lib/table" {
   export interface TypedColumnProps<T>
@@ -187,20 +188,31 @@ const Enhanced = compose<any, CursorPaginatedTableOutProps<any>>(
   })
 )(PrivateCursorPaginatedTable);
 
-export default function CursorPaginatedTable<T>({
-  columns,
-  rowKey,
-  getFilteredValue,
-  overrideConfiguration,
-  syncRepository
-}: CursorPaginatedTableOutProps<T>) {
-  return (
-    <Enhanced
-      columns={columns}
-      getFilteredValue={getFilteredValue}
-      overrideConfiguration={overrideConfiguration}
-      rowKey={rowKey}
-      syncRepository={syncRepository}
-    />
-  );
+class CursorPaginatedTable<T> extends Component<
+  CursorPaginatedTableOutProps<T>
+> {
+  static defaultOverrideConfiguration?: typeof CursorPaginatedTable["prototype"]["props"]["overrideConfiguration"];
+
+  createOverrideConfiguration() {
+    return {
+      ...CursorPaginatedTable.defaultOverrideConfiguration,
+      ...this.props.overrideConfiguration
+    };
+  }
+
+  render() {
+    const { columns, rowKey, getFilteredValue, syncRepository } = this.props;
+
+    return (
+      <Enhanced
+        columns={columns}
+        getFilteredValue={getFilteredValue}
+        overrideConfiguration={this.createOverrideConfiguration()}
+        rowKey={rowKey}
+        syncRepository={syncRepository}
+      />
+    );
+  }
 }
+
+export default CursorPaginatedTable;

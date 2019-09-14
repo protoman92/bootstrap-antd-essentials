@@ -1,7 +1,9 @@
 import { Table } from "antd";
 import { ComponentType, shallow } from "enzyme";
 import React, { createElement } from "react";
-import { PrivateCursorPaginatedTable } from "./CursorPaginatedTable";
+import CursorPaginatedTable, {
+  PrivateCursorPaginatedTable
+} from "./CursorPaginatedTable";
 
 function pickProps<P, K extends keyof P>(
   c: ComponentType<P>,
@@ -224,5 +226,36 @@ describe("Cursor paginated table", () => {
 
     // Then
     expect(replaceURLQuery).toHaveBeenCalled();
+  });
+
+  it("Should add default override config", async () => {
+    try {
+      // Setup
+      const goToNextPage = jest.fn();
+      const goToPreviousPage = jest.fn();
+
+      const Element = createElement(
+        pickProps(CursorPaginatedTable, "overrideConfiguration"),
+        {
+          overrideConfiguration: {
+            baseURL: "base-url-1"
+          }
+        }
+      );
+
+      CursorPaginatedTable.defaultOverrideConfiguration = { url: "url-1" };
+      const wrapper = shallow(Element);
+
+      // When
+      const { overrideConfiguration } = wrapper.at(0).props();
+
+      // Then
+      expect(overrideConfiguration).toEqual({
+        baseURL: "base-url-1",
+        url: "url-1"
+      });
+    } finally {
+      CursorPaginatedTable.defaultOverrideConfiguration = undefined;
+    }
   });
 });
