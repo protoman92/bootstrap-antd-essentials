@@ -230,15 +230,10 @@ class CursorPaginatedTable<T> extends Component<
   }
 
   render() {
-    const { columns, rowKey, getFilteredValue, syncRepository } = this.props;
-
     return (
       <Enhanced
-        columns={columns}
-        getFilteredValue={getFilteredValue}
+        {...this.props}
         overrideConfiguration={this.createOverrideConfiguration()}
-        rowKey={rowKey}
-        syncRepository={syncRepository}
       />
     );
   }
