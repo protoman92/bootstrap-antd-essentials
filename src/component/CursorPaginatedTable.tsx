@@ -17,7 +17,6 @@ import React, { Component } from "react";
 import { compose } from "recompose";
 import { StrictOmit } from "ts-essentials";
 import "./CursorPaginatedTable.css";
-import { render } from "enzyme";
 
 declare module "antd/lib/table" {
   export interface TypedColumnProps<T>
@@ -29,11 +28,25 @@ declare module "antd/lib/table" {
   }
 }
 
+interface AcceptableTableProps<T>
+  extends Pick<
+    TableProps<T>,
+    | "bodyStyle"
+    | "bordered"
+    | "rowClassName"
+    | "scroll"
+    | "size"
+    | "style"
+    | "useFixedHeader"
+  > {}
+
 export interface CursorPaginatedTableInProps<T>
-  extends URLCursorPaginatedSyncInProps<T> {}
+  extends AcceptableTableProps<T>,
+    URLCursorPaginatedSyncInProps<T> {}
 
 export interface CursorPaginatedTableOutProps<T>
-  extends URLCursorPaginatedSyncOutProps {
+  extends AcceptableTableProps<T>,
+    URLCursorPaginatedSyncOutProps {
   readonly columns: readonly TypedColumnProps<T>[];
   readonly rowKey: Extract<keyof T, string>;
 
@@ -127,7 +140,14 @@ export class PrivateCursorPaginatedTable<T> extends Component<
       rowKey,
       sortField,
       getFilteredValue,
-      getURLQuery
+      getURLQuery,
+      bodyStyle,
+      bordered,
+      rowClassName,
+      scroll,
+      size,
+      style,
+      useFixedHeader
     } = this.props;
 
     const urlQuery = getURLQuery();
@@ -155,6 +175,15 @@ export class PrivateCursorPaginatedTable<T> extends Component<
     return (
       <div className="cursor-paginated-table-container">
         <Table
+          // Table props.
+          bodyStyle={bodyStyle}
+          bordered={bordered}
+          rowClassName={rowClassName}
+          scroll={scroll}
+          size={size}
+          style={style}
+          useFixedHeader
+          // Custom props.
           columns={columns}
           dataSource={[...data]}
           loading={isLoadingData}
