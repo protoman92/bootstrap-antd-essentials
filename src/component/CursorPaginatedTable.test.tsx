@@ -7,7 +7,7 @@ import CursorPaginatedTable, {
 
 function pickProps<P, K extends keyof P>(
   c: ComponentType<P>,
-  ...keys: readonly K[]
+  ..._keys: readonly K[]
 ): ComponentType<Pick<P, K>> {
   return c as any;
 }
@@ -231,9 +231,6 @@ describe("Cursor paginated table", () => {
   it("Should add default override config", async () => {
     try {
       // Setup
-      const goToNextPage = jest.fn();
-      const goToPreviousPage = jest.fn();
-
       const Element = createElement(
         pickProps(CursorPaginatedTable, "overrideConfiguration"),
         {

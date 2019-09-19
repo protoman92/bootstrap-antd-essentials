@@ -7,14 +7,17 @@ import {
   TableProps,
   TypedColumnProps
 } from "antd/lib/table";
-import { lifecycle } from "bootstrap-react-essentials/dist/component/hoc/betterRecompose";
 import {
   urlCursorPaginatedSyncHOC,
   URLCursorPaginatedSyncInProps,
   URLCursorPaginatedSyncOutProps
 } from "bootstrap-react-essentials/dist/component/hoc/dataHOC";
+import {
+  getURLQuery as defaultGetURLQuery,
+  replaceURLQuery as defaultReplaceURLQuery
+} from "bootstrap-react-essentials/dist/utils";
 import React, { Component } from "react";
-import { compose } from "recompose";
+import { compose, lifecycle } from "recompose";
 import { StrictOmit } from "ts-essentials";
 import "./CursorPaginatedTable.css";
 
@@ -42,7 +45,10 @@ interface AcceptableTableProps<T>
 
 export interface CursorPaginatedTableInProps<T>
   extends AcceptableTableProps<T>,
-    URLCursorPaginatedSyncInProps<T> {}
+    URLCursorPaginatedSyncInProps<T> {
+  readonly getURLQuery?: typeof defaultGetURLQuery;
+  readonly replaceURLQuery?: typeof defaultReplaceURLQuery;
+}
 
 export interface CursorPaginatedTableOutProps<T>
   extends AcceptableTableProps<T>,
@@ -102,7 +108,9 @@ export class PrivateCursorPaginatedTable<T> extends Component<
       return;
     }
 
-    this.props.replaceURLQuery({
+    const { history, replaceURLQuery = defaultReplaceURLQuery } = this.props;
+
+    replaceURLQuery(history, {
       ...f,
       limit: `${pageSize}`,
       order,
@@ -130,17 +138,18 @@ export class PrivateCursorPaginatedTable<T> extends Component<
 
   render() {
     let {
+      getURLQuery = defaultGetURLQuery,
       columns: baseColumns,
       data,
       hasNext,
       hasPrevious,
       isLoadingData,
       limit,
+      location,
       order,
       rowKey,
       sortField,
       getFilteredValue,
-      getURLQuery,
       bodyStyle,
       bordered,
       rowClassName,
@@ -150,7 +159,7 @@ export class PrivateCursorPaginatedTable<T> extends Component<
       useFixedHeader
     } = this.props;
 
-    const urlQuery = getURLQuery();
+    const urlQuery = getURLQuery(location);
     const sortOrder = mapSortOrder(order);
 
     const columns: ColumnProps<T>[] = baseColumns.map(
@@ -182,7 +191,7 @@ export class PrivateCursorPaginatedTable<T> extends Component<
           scroll={scroll}
           size={size}
           style={style}
-          useFixedHeader
+          useFixedHeader={useFixedHeader}
           // Custom props.
           columns={columns}
           dataSource={[...data]}

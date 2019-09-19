@@ -1,6 +1,7 @@
 import { createURLDataSyncRepository } from "bootstrap-react-essentials/dist/repository/dataRepository";
 import { toArray } from "bootstrap-react-essentials/dist/utils";
 import React from "react";
+import { withRouter } from "react-router";
 import CursorPaginatedTable from "../../src/component/CursorPaginatedTable";
 import "./App.scss";
 
@@ -24,10 +25,12 @@ const syncRepository = {
   update: async () => ({})
 };
 
+const Table = withRouter(CursorPaginatedTable);
+
 function App() {
   return (
     <div className="App">
-      <CursorPaginatedTable
+      <Table
         columns={[
           { title: "Name", dataIndex: "name", sorter: true },
           {
