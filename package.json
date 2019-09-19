@@ -1,6 +1,6 @@
 {
   "name": "bootstrap-antd-essentials",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "description": "Library of essentials for a bootstrapped React project with antd",
   "scripts": {
     "build": "tsc",
@@ -26,9 +26,7 @@
   "homepage": "https://github.com/protoman92/bootstrap-antd-essentials#readme",
   "dependencies": {
     "antd": "^3.20.2",
-    "bootstrap-react-essentials": "^3.8.3",
-    "react-router": "^5.0.1",
-    "react-router-dom": "^5.0.1"
+    "bootstrap-react-essentials": "^3.8.4"
   },
   "devDependencies": {
     "@types/enzyme": "^3.10.2",
