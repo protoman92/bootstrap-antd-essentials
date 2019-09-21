@@ -1,9 +1,7 @@
 import { Table } from "antd";
 import { ComponentType, shallow } from "enzyme";
 import React, { createElement } from "react";
-import CursorPaginatedTable, {
-  PrivateCursorPaginatedTable
-} from "./CursorPaginatedTable";
+import CursorPaginatedTable, { PrivateCursorPaginatedTable } from ".";
 
 function pickProps<P, K extends keyof P>(
   c: ComponentType<P>,

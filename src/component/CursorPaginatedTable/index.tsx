@@ -19,7 +19,7 @@ import {
 import React, { Component } from "react";
 import { compose, lifecycle } from "recompose";
 import { StrictOmit } from "ts-essentials";
-import "./CursorPaginatedTable.css";
+import "./style.css";
 
 declare module "antd/lib/table" {
   export interface TypedColumnProps<T>
